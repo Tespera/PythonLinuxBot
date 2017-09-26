@@ -2,6 +2,7 @@
 
 import qqbot
 from run import response
+from functools import partial
 
 @qqbot.QQBotSlot
 def onQQMessage(bot,contact,member,content):
@@ -18,8 +19,9 @@ def onQQMessage(bot,contact,member,content):
 	'''
 	if '@ME' in content:
 		if contact.qq == '25284744':
-			sendData = response(content)
-			bot.SendTo(contact,sendData)
+			p = partial(response,bot,contact)
+			p(content)
+
 		# print(contact.qq)         #打印群号
 		# print(member.qq)		  #打印@ME的QQ号
 		# print(content)            #打印内容
