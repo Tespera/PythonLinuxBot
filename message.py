@@ -3,6 +3,7 @@
 import qqbot
 from run import response
 from functools import partial
+from setting import UserQQ,GroupQQ
 
 @qqbot.QQBotSlot
 def onQQMessage(bot,contact,member,content):
@@ -18,7 +19,7 @@ def onQQMessage(bot,contact,member,content):
 	:param content: 内容
 	'''
 	if '@ME' in content:
-		if contact.qq == '25284744':
+		if contact.qq == GroupQQ:
 			p = partial(response,bot,contact)
 			p(content)
 
@@ -27,4 +28,4 @@ def onQQMessage(bot,contact,member,content):
 		# print(content)            #打印内容
 
 if __name__ == '__main__':
-	qqbot.RunBot(qq = '3578126165')
+	qqbot.RunBot(qq = UserQQ)

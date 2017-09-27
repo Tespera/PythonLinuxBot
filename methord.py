@@ -1,6 +1,9 @@
 #coding:utf-8
 
 import re
+import peewee
+import paramiko
+from setting import SSHCLIENT,DATABASE
 
 def takeRe(content,res,function):
 	'''
@@ -15,3 +18,33 @@ def takeRe(content,res,function):
 		return function()
 	else:
 		return None
+
+def docommand(command):
+	ssh_data = SSHCLIENT['defalut']
+	ssh = paramiko.SSHClient()
+	know_hosts = paramiko.AutoAddPolicy()
+	ssh.set_missing_host_key_policy(know_hosts)
+
+	ssh.connect(
+		hostname = ssh_data['hostname'],
+		port = ssh_data['port'],
+		username = ssh_data['username'],
+		password = ssh_data['password']
+	)
+
+	stdin,stdout,sdterr = ssh.exec_command(command)
+	cont = stdout.read()
+	ssh.close()
+	return cont
+
+def createDB():
+	types = DATABASE['TYPE']
+	if types == 'sqllite':
+		db = peewee.SqliteDatabase(DATABASE['NAME'])
+	else:
+		db = None
+	return db
+
+class BaseModel(peewee.Model):
+	class Meta:
+		database = createDB()
